@@ -11,6 +11,11 @@ func (dba *Orm) Insert(data ...interface{}) (int64, error) {
 	return dba.exec("insert", data...)
 }
 
+// Insert ignore : insert ignore data and get affected rows
+func (dba *Orm) InsertIgnore(data ...interface{}) (int64, error) {
+	return dba.exec("insert ignore", data...)
+}
+
 // insertGetId : insert data and get id
 func (dba *Orm) InsertGetId(data ...interface{}) (int64, error) {
 	_, err := dba.Insert(data...)

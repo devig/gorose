@@ -2,8 +2,9 @@ package gorose
 
 import (
 	"errors"
-	"github.com/gohouse/t"
 	"reflect"
+
+	"github.com/gohouse/t"
 )
 
 // Insert : insert data and get affected rows
@@ -43,12 +44,14 @@ func (dba *Orm) Delete() (int64, error) {
 
 // Delete : delete data
 func (dba *Orm) exec(operType string, data ...interface{}) (int64, error) {
-	if operType == "insert" || operType == "update" {
+	if operType == "insert ignore" || operType == "insert" || operType == "update" {
 		if dba.GetData() == nil {
 			if len(data) > 0 {
 				dba.Data(data[0])
 			} else {
-				return 0, GetErr(ERR_PARAMS_MISSING, "Data()")
+				if operType != "insert ignore" {
+					return 0, GetErr(ERR_PARAMS_MISSING, "Data()")
+				}
 			}
 		}
 

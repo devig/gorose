@@ -6,7 +6,7 @@ import (
 )
 
 // TAGNAME ...
-var TAGNAME = "gorose"
+var TAGNAME = "db"
 
 // IGNORE ...
 var IGNORE = "-"

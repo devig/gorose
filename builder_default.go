@@ -3,11 +3,12 @@ package gorose
 import (
 	"errors"
 	"fmt"
-	"github.com/gohouse/golib/structEngin"
-	"github.com/gohouse/t"
 	"reflect"
 	"strconv"
 	"strings"
+
+	"github.com/gohouse/golib/structEngin"
+	"github.com/gohouse/t"
 )
 
 var operator = []string{"=", ">", "<", "!=", "<>", ">=", "<=", "like", "not like",
@@ -20,11 +21,11 @@ type BuilderDefault struct {
 	placeholder int
 	driver      string
 	bindValues  []interface{}
-	current IBuilder
+	current     IBuilder
 }
 
 // NewBuilderDefault 初始化
-func NewBuilderDefault(o IOrm,current IBuilder) *BuilderDefault {
+func NewBuilderDefault(o IOrm, current IBuilder) *BuilderDefault {
 	//onceBuilderDefault.Do(func() {
 	//	builderDefault = new(BuilderDefault)
 	//	builderDefault.operator = operator
@@ -120,6 +121,9 @@ func (b *BuilderDefault) BuildExecute(operType string) (sqlStr string, args []in
 	switch operType {
 	case "insert":
 		sqlStr = fmt.Sprintf("INSERT INTO %s (%s) VALUES %s", b.BuildTable(), insertkey, insertval)
+	case "insert ignore":
+		sqlStr = fmt.Sprintf("INSERT IGNORE INTO %s (%s) VALUES %s", b.BuildTable(), insertkey, insertval)
+		operType = "insert"
 	case "update":
 		where, err = b.BuildWhere()
 		if err != nil {
@@ -296,7 +300,7 @@ func (b *BuilderDefault) parseData(operType string, data []map[string]interface{
 		insertValues = append(insertValues, "("+strings.Join(insertValuesSub, ",")+")")
 	}
 	var tmpInsertFields = insertFields[:0]
-	for _,v := range insertFields {
+	for _, v := range insertFields {
 		tmpInsertFields = append(tmpInsertFields, b.current.AddFieldQuotes(v))
 	}
 	return strings.Join(dataObj, ","), strings.Join(tmpInsertFields, ","), strings.Join(insertValues, ",")
